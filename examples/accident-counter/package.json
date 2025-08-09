@@ -18,6 +18,9 @@
     "url": "https://github.com/stevekinney/testing-javascript/issues"
   },
   "homepage": "https://github.com/stevekinney/testing-javascript#readme",
+  "dependencies": {
+    "css-configuration": "workspace:*"
+  },
   "devDependencies": {
     "@playwright/test": "^1.47.2",
     "@testing-library/dom": "^10.4.0",

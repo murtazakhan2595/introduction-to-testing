@@ -5,40 +5,84 @@ import { Counter } from './counter';
 
 import '@testing-library/jest-dom/vitest';
 
-describe.todo('Counter ', () => {
+describe('Counter ', () => {
   beforeEach(() => {
     render(<Counter />);
   });
 
-  it('renders with an initial count of 0');
+  it('renders with an initial count of 0', () => {
+    const counterCount = screen.getByTestId('counter-count');
+    expect(counterCount).toHaveTextContent('0');
+  });
 
-  it('disables the "Decrement" and "Reset" buttons when the count is 0');
+  it('disables the "Decrement" and "Reset" buttons when the count is 0', () => {
+    const decrementButton = screen.getByRole('button', { name: 'Decrement' });
+    const resetButton = screen.getByRole('button', { name: 'Reset' });
 
-  it.todo('displays "days" when the count is 0', () => {});
+    expect(decrementButton).toBeDisabled();
+    expect(resetButton).toBeDisabled();
+  });
 
-  it.todo(
-    'increments the count when the "Increment" button is clicked',
-    async () => {},
-  );
+  it('displays "days" when the count is 0', () => {
+    const counterUnit = screen.getByTestId('counter-unit');
+    expect(counterUnit).toHaveTextContent('days');
+  });
 
-  it.todo('displays "day" when the count is 1', async () => {});
+  it('increments the count when the "Increment" button is clicked', async () => {
+    const incrementButton = screen.getByRole('button', { name: 'Increment' });
+    const counterCount = screen.getByTestId('counter-count');
+    await userEvent.click(incrementButton);
+    expect(counterCount).toHaveTextContent('1');
+  });
 
-  it.todo(
-    'decrements the count when the "Decrement" button is clicked',
-    async () => {},
-  );
+  it('displays "day" when the count is 1', async () => {
+    const incrementButton = screen.getByRole('button', { name: 'Increment' });
+    const counterCount = screen.getByTestId('counter-count');
+    await userEvent.click(incrementButton);
+    expect(counterCount).toHaveTextContent('1');
+    const counterUnit = screen.getByTestId('counter-unit');
+    expect(counterUnit).toHaveTextContent('day');
+  });
 
-  it.todo('does not allow decrementing below 0', async () => {});
+  it('decrements the count when the "Decrement" button is clicked', async () => {
+    const incrementButton = screen.getByRole('button', {
+      name: 'Increment',
+    });
+    await userEvent.click(incrementButton);
+    await userEvent.click(incrementButton);
+    const decrementButton = screen.getByRole('button', { name: 'Decrement' });
+    const counterCount = screen.getByTestId('counter-count');
+    await userEvent.click(decrementButton);
+    expect(counterCount).toHaveTextContent('1');
+  });
 
-  it.todo(
-    'resets the count when the "Reset" button is clicked',
-    async () => {},
-  );
+  it('does not allow decrementing below 0', async () => {
+    const decrementButton = screen.getByRole('button', { name: 'Decrement' });
+    const counterCount = screen.getByTestId('counter-count');
+    await userEvent.click(decrementButton);
+    expect(counterCount).toHaveTextContent('0');
+  });
 
-  it.todo(
-    'disables the "Decrement" and "Reset" buttons when the count is 0',
-    () => {},
-  );
+  it('resets the count when the "Reset" button is clicked', async () => {
+    const resetButton = screen.getByRole('button', {
+      name: 'Reset',
+    });
+    const incrementButton = screen.getByRole('button', {
+      name: 'Increment',
+    });
+    const counterCount = screen.getByTestId('counter-count');
+    await userEvent.click(incrementButton);
+    await userEvent.click(resetButton);
+    expect(counterCount).toHaveTextContent('0');
+  });
 
-  it.todo('updates the document title based on the count', async () => {});
+  it('updates the document title based on the count', async () => {
+  const incrementButton = screen.getByText('Increment');
+    await userEvent.click(incrementButton);
+
+    expect(document.title).toBe('1 day — Accident Counter');
+
+    await userEvent.click(incrementButton);
+    expect(document.title).toBe('2 days — Accident Counter');
+  });
 });
